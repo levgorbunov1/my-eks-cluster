@@ -1,22 +1,14 @@
-name: "Deploy hosting infra"
+name: "Destroy hosting infra"
 
 on:
-  pull_request:
-    paths:
-      - "hosting-infra/**"
-    branches:
-      - main
-  push:
-    paths:
-      - "hosting-infra/**"
-    branches: ["main"]
+  workflow_dispatch:
 
 env:
     TERRAFORM_VERSION: "1.6.6"
 
 jobs:
-  deploy-hosting-infra:
-    name: "Deploy hosting infra"
+  destroy-hosting-infra:
+    name: "Destroy hosting infra"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,12 +33,12 @@ jobs:
         id: init
         run: ls -latr; terraform init -input=false -no-color
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -input=false -no-color
+      - name: Terraform Plan Destroy
+        id: plan-destroy
+        run: terraform plan -destroy -input=false -no-color
         continue-on-error: false
 
-      - name: Terraform Apply
+      - name: Terraform destroy
         if: github.ref == 'refs/heads/main'
-        id: apply
-        run: terraform apply -input=false -no-color -auto-approve
+        id: destroy
+        run: terraform destroy -input=false -no-color -auto-approve
