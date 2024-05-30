@@ -1,6 +1,7 @@
 name: "Deploy hosting infra"
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - "hosting-infra/**"
@@ -49,4 +50,4 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         id: apply
-        run: terraform apply -input=false -no-color -auto-approve
+        run: terraform apply -input=false -no-color -auto-approve 
