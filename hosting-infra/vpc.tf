@@ -1,12 +1,90 @@
+# VPC
 resource "aws_vpc" "eks_vpc" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_subnet" "eks_subnet" {
-  count = 2
+# Internet gateways
+resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.eks_vpc.id
-  cidr_block = cidrsubnet(aws_vpc.eks_vpc.cidr_block, 8, count.index)
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
 }
 
-data "aws_availability_zones" "available" {}
+resource "aws_eip" "nat" {
+  domain   = "vpc"
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public-eu-west-1a.id
+
+  depends_on = [aws_internet_gateway.igw]
+}
+
+# Subnets
+resource "aws_subnet" "private-eu-west-2a" {
+  vpc_id            = aws_vpc.eks_vpc.id
+  cidr_block        = "10.0.0.0/19"
+  availability_zone = "eu-west-2a"
+}
+
+resource "aws_subnet" "private-eu-west-2b" {
+  vpc_id            = aws_vpc.eks_vpc.id
+  cidr_block        = "10.0.32.0/19"
+  availability_zone = "eu-west-2b"
+}
+
+resource "aws_subnet" "public-eu-west-1a" {
+  vpc_id                  = aws_vpc.eks_vpc.id
+  cidr_block              = "10.0.64.0/19"
+  availability_zone       = "eu-west-1a"
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "public-eu-west-1b" {
+  vpc_id                  = aws_vpc.eks_vpc.id
+  cidr_block              = "10.0.96.0/19"
+  availability_zone       = "eu-west-1b"
+  map_public_ip_on_launch = true
+}
+
+# Route tables
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.eks_vpc.id
+
+  route = [
+    {
+      cidr_block                 = "0.0.0.0/0"
+      nat_gateway_id             = aws_nat_gateway.nat.id
+    },
+  ]
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.eks_vpc.id
+
+  route = [
+    {
+      cidr_block                 = "0.0.0.0/0"
+      gateway_id                 = aws_internet_gateway.igw.id
+    },
+  ]
+}
+
+resource "aws_route_table_association" "private-eu-west-2a" {
+  subnet_id      = aws_subnet.private-eu-west-2a.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private-eu-west-2b" {
+  subnet_id      = aws_subnet.private-eu-west-2b.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "public-eu-west-1a" {
+  subnet_id      = aws_subnet.public-eu-west-1a.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public-eu-west-1b" {
+  subnet_id      = aws_subnet.public-eu-west-1b.id
+  route_table_id = aws_route_table.public.id
+}
