@@ -6,8 +6,7 @@ resource "aws_eks_cluster" "eks_cluster" {
     subnet_ids = [
       aws_subnet.private-eu-west-2a.id,
       aws_subnet.private-eu-west-2b.id,
-      aws_subnet.public-eu-west-1a.id,
-      aws_subnet.public-eu-west-1b.id
+      aws_subnet.public-eu-west-2c.id
     ]
 
     # security_group_ids = [aws_security_group.eks_cluster_security_group.id]

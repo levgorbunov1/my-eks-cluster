@@ -14,7 +14,7 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public-eu-west-1a.id
+  subnet_id     = aws_subnet.public-eu-west-2c.id
 
   depends_on = [aws_internet_gateway.igw]
 }
@@ -32,17 +32,10 @@ resource "aws_subnet" "private-eu-west-2b" {
   availability_zone = "eu-west-2b"
 }
 
-resource "aws_subnet" "public-eu-west-1a" {
+resource "aws_subnet" "public-eu-west-2c" {
   vpc_id                  = aws_vpc.eks_vpc.id
   cidr_block              = "10.0.64.0/19"
-  availability_zone       = "eu-west-1a"
-  map_public_ip_on_launch = true
-}
-
-resource "aws_subnet" "public-eu-west-1b" {
-  vpc_id                  = aws_vpc.eks_vpc.id
-  cidr_block              = "10.0.96.0/19"
-  availability_zone       = "eu-west-1b"
+  availability_zone       = "eu-west-2c"
   map_public_ip_on_launch = true
 }
 
@@ -50,23 +43,19 @@ resource "aws_subnet" "public-eu-west-1b" {
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.eks_vpc.id
 
-  route = [
-    {
-      cidr_block                 = "0.0.0.0/0"
-      nat_gateway_id             = aws_nat_gateway.nat.id
-    },
-  ]
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.nat.id
+  }
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.eks_vpc.id
 
-  route = [
-    {
-      cidr_block                 = "0.0.0.0/0"
-      gateway_id                 = aws_internet_gateway.igw.id
-    },
-  ]
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
 }
 
 resource "aws_route_table_association" "private-eu-west-2a" {
@@ -79,12 +68,7 @@ resource "aws_route_table_association" "private-eu-west-2b" {
   route_table_id = aws_route_table.private.id
 }
 
-resource "aws_route_table_association" "public-eu-west-1a" {
-  subnet_id      = aws_subnet.public-eu-west-1a.id
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table_association" "public-eu-west-1b" {
-  subnet_id      = aws_subnet.public-eu-west-1b.id
+resource "aws_route_table_association" "public-eu-west-2c" {
+  subnet_id      = aws_subnet.public-eu-west-2c.id
   route_table_id = aws_route_table.public.id
 }
