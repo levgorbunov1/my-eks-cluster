@@ -7,11 +7,7 @@ on:
       - "hosting-infra/**"
     branches:
       - main
-  push:
-    paths:
-      - "hosting-infra/**"
-    branches: ["main"]
-
+      
 env:
     TERRAFORM_VERSION: "1.6.6"
 
