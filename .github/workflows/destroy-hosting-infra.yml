@@ -26,7 +26,7 @@ jobs:
       - name: Configure AWS Credentials for Infra Account
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_PERSONAL_ADMIN_ROLE}}
+          role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
           aws-region: eu-west-2
 
       - name: Terraform Init
