@@ -1,0 +1,52 @@
+name: "Deploy App"
+
+on:
+  workflow_dispatch:
+
+env:
+    ECR_ARN: ${{ secrets.ECR_ARN }}
+
+jobs:
+  deploy-app:
+    name: "Deploy App"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    defaults:
+      run:
+        working-directory: "app"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials for Infra Account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
+          aws-region: eu-west-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build tag and push app image
+        id: build-tag-push-image
+        run: |
+          docker build -t webapp:latest .
+          docker tag webapp:latest $ECR_ARN:latest
+          docker push $ECR_ARN:latest
+
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+          
+      - name: Deploy app
+        working-directory: "deployment-infra"
+        id: deploy-app
+        run: envsubst < deployment.yml | kubectl apply -f .
+
+
+    
+
+    

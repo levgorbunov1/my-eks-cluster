@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-k8s-job
+  namespace: my-webapp
+spec:
+  selector:
+    matchLabels:
+      app: simple-k8s-job
+  template:
+    metadata:
+      labels:
+        app: simple-k8s-job
+    spec:
+      containers:
+      - name: simple-k8s-job
+        image: $ECR_ARN:latest
