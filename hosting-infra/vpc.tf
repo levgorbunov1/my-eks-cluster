@@ -20,10 +20,11 @@ resource "aws_nat_gateway" "nat" {
 }
 
 # Subnets
-resource "aws_subnet" "private-eu-west-2a" {
+resource "aws_subnet" "public-eu-west-2a" {
   vpc_id            = aws_vpc.eks_vpc.id
   cidr_block        = "10.0.32.0/19"
   availability_zone = "eu-west-2a"
+  map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "private-eu-west-2b" {
@@ -32,7 +33,7 @@ resource "aws_subnet" "private-eu-west-2b" {
   availability_zone = "eu-west-2b"
 }
 
-resource "aws_subnet" "public-eu-west-2a" {
+resource "aws_subnet" "public-eu-west-2a2" {
   vpc_id                  = aws_vpc.eks_vpc.id
   cidr_block              = "10.0.64.0/19"
   availability_zone       = "eu-west-2a"
@@ -58,9 +59,9 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_route_table_association" "private-eu-west-2a" {
-  subnet_id      = aws_subnet.private-eu-west-2a.id
-  route_table_id = aws_route_table.private.id
+resource "aws_route_table_association" "public-eu-west-2a2" {
+  subnet_id      = aws_subnet.public-eu-west-2a2.id
+  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "private-eu-west-2b" {
