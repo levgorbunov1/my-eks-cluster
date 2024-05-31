@@ -37,6 +37,14 @@ jobs:
           --image-ids "$(aws ecr list-images --region eu-west-2 --repository-name webapp_ecr --query 'imageIds[*]' --output json)"
         continue-on-error: false
 
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+
+      - name: Destroy service
+        id: destroy-service
+        run: kubectl delete service webapp-service
+
       - name: Terraform Init
         id: init
         run: ls -latr; terraform init -input=false -no-color
