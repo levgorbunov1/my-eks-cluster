@@ -32,6 +32,15 @@ data "aws_iam_policy_document" "assume_role_policy-document" {
       values   = ["sts.amazonaws.com"]
     }
   }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["sts:AssumeRole"]
+    principals {
+      type        = "AWS"
+      identifiers = [var.admin_user_arn]  
+    }
+  }
 }
 
 data "aws_iam_policy_document" "cicd_role_policy_document" {
