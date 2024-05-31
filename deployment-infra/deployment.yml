@@ -1,15 +1,19 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: simple-k8s-job
+  name: webapp
   namespace: my-webapp
 spec:
+  selector:
+    matchLabels:
+      app: webapp
   template:
     metadata:
       labels:
-        app: simple-k8s-job
+        app: webapp
     spec:
       containers:
-      - name: simple-k8s-job
+      - name: webapp
         image: ${ECR_ARN}:latest
-      restartPolicy: Never
+        ports:
+        - containerPort: 8080
