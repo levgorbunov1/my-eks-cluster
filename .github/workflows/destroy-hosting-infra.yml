@@ -31,7 +31,9 @@ jobs:
 
       - name: Delete ECR image
         id: delete-ecr-image
-        run: aws ecr batch-delete-image --repository-name webapp_ecr --image-ids imageTag=latest --region eu-west-2
+        run: |
+          aws ecr batch-delete-image --repository-name webapp_ecr --image-ids imageTag=- --region eu-west-2
+          aws ecr batch-delete-image --repository-name webapp_ecr --image-ids imageTag=latest --region eu-west-2
         continue-on-error: false
 
       - name: Terraform Init
