@@ -30,7 +30,7 @@ jobs:
 
       - name: Build app image
         id: build-image
-        run: docker build simple-k8s-job:latest .
+        run: docker build -t simple-k8s-job:latest .
 
       - name: Connect to cluster
         id: cluster-connect
