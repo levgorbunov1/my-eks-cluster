@@ -2,11 +2,6 @@ name: "Deploy App"
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "app/**"
-    branches:
-      - main
 
 env:
     ECR_ARN: ${{ secrets.ECR_ARN }}
