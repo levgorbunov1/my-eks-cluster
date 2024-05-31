@@ -1,0 +1,50 @@
+name: "Deploy App"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "app/**"
+    branches:
+      - main
+
+jobs:
+  deploy-app:
+    name: "Deploy App"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    defaults:
+      run:
+        working-directory: "app"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials for Infra Account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
+          aws-region: eu-west-2
+
+      - name: Build app image
+        id: build-image
+        run: docker build simple-k8s-job:latest .
+
+      - name: Connect to cluster
+        id: cluster-connect
+        run: | 
+          aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+          kubectl get namespaces
+        continue-on-error: false
+          
+      - name: Deploy app
+        working-directory: "deployment-infra"
+        id: deploy-app
+        run: kubectl apply -f .
+
+
+    
+
+    
