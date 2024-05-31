@@ -32,8 +32,9 @@ jobs:
       - name: Delete ECR images
         id: delete-ecr-image
         run: |
-          aws ecr list-images --repository-name webapp_ecr --region eu-west-2 --query 'imageIds[*]' --output json | \
+          aws ecr list-images --repository-name webapp_ecr --region eu-west-2 --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json | \
           jq -c '.[] | {imageDigest: .imageDigest}' | \
+          jq -s . | \
           xargs -I {} aws ecr batch-delete-image --repository-name webapp_ecr --region eu-west-2 --image-ids '{}'
         continue-on-error: false
 
