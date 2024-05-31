@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+    ECR_ARN: ${{ secrets.ECR_ARN }}
+
 jobs:
   deploy-app:
     name: "Deploy App"
@@ -28,21 +31,25 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
           aws-region: eu-west-2
 
-      - name: Build app image
-        id: build-image
-        run: docker build -t simple-k8s-job:latest .
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build tag and push app image
+        id: build-tag-push-image
+        run: |
+          docker build -t webapp:latest .
+          docker tag webapp:latest $ECR_ARN:latest
+          docker push $ECR_ARN:latest
 
       - name: Connect to cluster
         id: cluster-connect
-        run: | 
-          aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
-          kubectl get namespaces
-        continue-on-error: false
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
           
       - name: Deploy app
         working-directory: "deployment-infra"
         id: deploy-app
-        run: kubectl apply -f .
+        run: envsubst < deployment.yml | kubectl apply -f .
 
 
     
