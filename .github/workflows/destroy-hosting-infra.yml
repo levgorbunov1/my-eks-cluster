@@ -32,10 +32,9 @@ jobs:
       - name: Delete ECR images
         id: delete-ecr-image
         run: |
-          aws ecr list-images --repository-name webapp_ecr --region eu-west-2 --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json | \
-          jq -c '.[] | {imageDigest: .imageDigest}' | \
-          jq -s . | \
-          xargs -I {} aws ecr batch-delete-image --repository-name webapp_ecr --region eu-west-2 --image-ids '{}'
+          aws ecr batch-delete-image --region eu-west-2 \
+          --repository-name webapp_ecr \
+          --image-ids "$(aws ecr list-images --region eu-west-2 --repository-name webapp_ecr --query 'imageIds[*]' --output json)"
         continue-on-error: false
 
       - name: Terraform Init
