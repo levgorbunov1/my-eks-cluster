@@ -31,7 +31,7 @@ jobs:
 
       - name: Delete ECR image
         id: delete-ecr-image
-        run: aws ecr list-images --repository-name webapp_ecr --region eu-west-2 --output json | xargs -I {} aws ecr batch-delete-image --repository-name webapp_ecr --image-ids "{}" --region eu-west-2
+        run: aws ecr list-images --repository-name webapp_ecr --region eu-west-2 --query 'imageIds[*]' --output json | xargs -I {} aws ecr batch-delete-image --repository-name webapp_ecr --image-ids "{}" --region eu-west-2
         continue-on-error: false
 
       - name: Terraform Init
