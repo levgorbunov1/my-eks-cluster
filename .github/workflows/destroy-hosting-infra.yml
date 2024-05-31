@@ -5,7 +5,6 @@ on:
 
 env:
     TERRAFORM_VERSION: "1.6.6"
-    ECR_ARN: ${{ secrets.ECR_ARN }}
 
 jobs:
   destroy-hosting-infra:
@@ -32,7 +31,7 @@ jobs:
 
       - name: Delete ECR image
         id: delete-ecr-image
-        run: aws ecr batch-delete-image --repository-name $ECR_ARN --image-ids imageTag=latest --region eu-west-2
+        run: aws ecr batch-delete-image --repository-name webapp_ecr --image-ids imageTag=latest --region eu-west-2
         continue-on-error: false
 
       - name: Terraform Init
