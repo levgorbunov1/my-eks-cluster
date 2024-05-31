@@ -5,6 +5,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   vpc_config {
     subnet_ids = [
       aws_subnet.private-eu-west-2a.id,
+      aws_subnet.private-eu-west-2b.id,
       aws_subnet.public-eu-west-2a.id
     ]
   }
