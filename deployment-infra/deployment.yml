@@ -1,12 +1,9 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: simple-k8s-job
   namespace: my-webapp
 spec:
-  selector:
-    matchLabels:
-      app: simple-k8s-job
   template:
     metadata:
       labels:
@@ -14,4 +11,5 @@ spec:
     spec:
       containers:
       - name: simple-k8s-job
-        image: $ECR_ARN:latest
+        image: ${ECR_ARN}:latest
+      restartPolicy: Never

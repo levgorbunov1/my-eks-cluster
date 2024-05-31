@@ -44,7 +44,9 @@ jobs:
       - name: Deploy app
         working-directory: "deployment-infra"
         id: deploy-app
-        run: envsubst < deployment.yml | kubectl apply -f .
+        run: |
+          kubectl apply -f namespace.yml
+          envsubst < deployment.yml | kubectl apply -f -
 
 
     
