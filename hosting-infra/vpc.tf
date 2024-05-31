@@ -28,7 +28,7 @@ resource "aws_subnet" "private-eu-west-2a" {
 
 resource "aws_subnet" "private-eu-west-2b" {
   vpc_id            = aws_vpc.eks_vpc.id
-  cidr_block        = "10.0.32.0/19"
+  cidr_block        = "10.0.0.0/19"
   availability_zone = "eu-west-2b"
 }
 
