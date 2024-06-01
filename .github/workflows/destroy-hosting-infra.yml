@@ -41,9 +41,10 @@ jobs:
         id: cluster-connect
         run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
 
-      - name: Destroy service
-        id: destroy-service
-        run: kubectl delete service webapp-service
+      - name: Uninstall helm chart
+        id: uninstall-helm
+        run: |
+          helm delete aws-load-balancer-controller -n kube-system
 
       - name: Terraform Init
         id: init
