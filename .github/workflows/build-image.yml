@@ -3,6 +3,9 @@ name: "Build and push image"
 on:
   workflow_dispatch:
 
+env:
+  ECR_ARN: ${{ secrets.ECR_ARN }}
+
 jobs:
   build-and-push-image:
     name: "Build and push image"
