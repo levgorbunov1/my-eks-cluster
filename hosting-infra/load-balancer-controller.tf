@@ -243,14 +243,9 @@ locals {
   })
 }
 
-resource "aws_iam_policy" "aws_load_balancer_controller_iam_policy" {
-  name   = "AWSLoadBalancerControllerIAMPolicy"
-  policy = local.iam_policy
-}
-
 resource "aws_iam_role" "eks_service_account_role" {
   name = "aws-load-balancer-controller-role"
-  assume_role_policy = data.aws_iam_policy_document.eks_serviceaccount_assume_role_policy
+  assume_role_policy = data.aws_iam_policy_document.eks_serviceaccount_assume_role_policy.json
 }
 
 data "aws_iam_policy_document" "eks_serviceaccount_assume_role_policy" {
@@ -271,7 +266,12 @@ data "aws_iam_policy_document" "eks_serviceaccount_assume_role_policy" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "attach_policy" {
+resource "aws_iam_policy" "aws_load_balancer_controller_iam_policy" {
+  name   = "AWSLoadBalancerControllerIAMPolicy"
+  policy = local.iam_policy
+}
+
+resource "aws_iam_role_policy_attachment" "aws_load_balancer_controller_iam_policy_attachment" {
   policy_arn = aws_iam_policy.aws_load_balancer_controller_iam_policy.arn
   role       = aws_iam_role.eks_service_account_role.name
 }

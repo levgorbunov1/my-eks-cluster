@@ -26,17 +26,6 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CICD_ROLE }}
           aws-region: eu-west-2
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build tag and push app image
-        id: build-tag-push-image
-        run: |
-          docker build -t webapp:latest .
-          docker tag webapp:latest $ECR_ARN:latest
-          docker push $ECR_ARN:latest
-
       - name: Connect to cluster
         id: cluster-connect
         run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
@@ -52,7 +41,7 @@ jobs:
             --set clusterName=webapp-eks-cluster \
             --set serviceAccount.create=false \
             --set region=eu-west-2 \
-            --set vpcId=${{ VPC_ID }} \
+            --set vpcId=$(aws ec2 describe-vpcs --filters "Name=cidr,Values=10.0.0.0/16" --query 'Vpcs[0].VpcId' --output text) \
             --set serviceAccount.name=aws-load-balancer-controller
           
       - name: Deploy app
