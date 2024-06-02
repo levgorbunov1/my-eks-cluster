@@ -44,19 +44,18 @@ jobs:
       - name: Delete kubernetes infrastructure
         id: delete-k8s
         run: |
-          helm delete aws-load-balancer-controller -n kube-system
           kubectl delete ingress webapp-ingress -n my-webapp
-          kubectl delete serviceaccount aws-load-balancer-controller -n kube-system
+          helm delete aws-load-balancer-controller -n kube-system
 
-      - name: Terraform Init
-        id: init
-        run: ls -latr; terraform init -input=false -no-color
+      # - name: Terraform Init
+      #   id: init
+      #   run: ls -latr; terraform init -input=false -no-color
 
-      - name: Terraform Plan Destroy
-        id: plan-destroy
-        run: terraform plan -destroy -input=false -no-color
-        continue-on-error: false
+      # - name: Terraform Plan Destroy
+      #   id: plan-destroy
+      #   run: terraform plan -destroy -input=false -no-color
+      #   continue-on-error: false
 
-      - name: Terraform destroy
-        id: destroy
-        run: terraform destroy -input=false -no-color -auto-approve
+      # - name: Terraform destroy
+      #   id: destroy
+      #   run: terraform destroy -input=false -no-color -auto-approve
