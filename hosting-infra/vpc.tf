@@ -39,6 +39,7 @@ resource "aws_subnet" "private-eu-west-2b" {
 
   tags = {
     "kubernetes.io/cluster/webapp-eks-cluster" = "shared"
+    "kubernetes.io/role/elb"               = "1"
   }
 }
 
@@ -50,7 +51,6 @@ resource "aws_subnet" "public-eu-west-2c" {
 
   tags = {
     "kubernetes.io/cluster/webapp-eks-cluster" = "shared"
-    "kubernetes.io/role/elb"               = "1"
   }
 }
 

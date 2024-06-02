@@ -18,3 +18,9 @@ spec:
         image: ${ECR_ARN}:latest
         ports:
         - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
