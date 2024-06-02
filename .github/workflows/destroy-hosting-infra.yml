@@ -29,13 +29,13 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
           aws-region: eu-west-2
 
-      # - name: Delete ECR images
-      #   id: delete-ecr-image
-      #   run: |
-      #     aws ecr batch-delete-image --region eu-west-2 \
-      #     --repository-name webapp_ecr \
-      #     --image-ids "$(aws ecr list-images --region eu-west-2 --repository-name webapp_ecr --query 'imageIds[*]' --output json)"
-      #   continue-on-error: false
+      - name: Delete ECR images
+        id: delete-ecr-image
+        run: |
+          aws ecr batch-delete-image --region eu-west-2 \
+          --repository-name webapp_ecr \
+          --image-ids "$(aws ecr list-images --region eu-west-2 --repository-name webapp_ecr --query 'imageIds[*]' --output json)"
+        continue-on-error: false
 
       - name: Connect to cluster
         id: cluster-connect
@@ -47,15 +47,15 @@ jobs:
           kubectl delete ingress webapp-ingress -n my-webapp
           helm delete aws-load-balancer-controller -n kube-system
 
-      # - name: Terraform Init
-      #   id: init
-      #   run: ls -latr; terraform init -input=false -no-color
+      - name: Terraform Init
+        id: init
+        run: ls -latr; terraform init -input=false -no-color
 
-      # - name: Terraform Plan Destroy
-      #   id: plan-destroy
-      #   run: terraform plan -destroy -input=false -no-color
-      #   continue-on-error: false
+      - name: Terraform Plan Destroy
+        id: plan-destroy
+        run: terraform plan -destroy -input=false -no-color
+        continue-on-error: false
 
-      # - name: Terraform destroy
-      #   id: destroy
-      #   run: terraform destroy -input=false -no-color -auto-approve
+      - name: Terraform destroy
+        id: destroy
+        run: terraform destroy -input=false -no-color -auto-approve
