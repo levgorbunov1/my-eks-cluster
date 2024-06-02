@@ -41,15 +41,12 @@ jobs:
         id: cluster-connect
         run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
 
-      - name: Uninstall helm chart
-        id: uninstall-helm
+      - name: Delete kubernetes infrastructure
+        id: delete-k8s
         run: |
           helm delete aws-load-balancer-controller -n kube-system
           kubectl delete ingress webapp-ingress -n my-webapp
-
-      - name: Delete serviceaccount
-        id: delete-sa 
-        run: kubectl delete serviceaccount aws-load-balancer-controller -n kube-system
+          kubectl delete serviceaccount aws-load-balancer-controller -n kube-system
 
       - name: Terraform Init
         id: init
