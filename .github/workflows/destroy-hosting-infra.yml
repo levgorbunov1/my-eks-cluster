@@ -43,8 +43,11 @@ jobs:
 
       - name: Uninstall helm chart
         id: uninstall-helm
-        run: |
-          helm delete aws-load-balancer-controller -n kube-system
+        run: helm delete aws-load-balancer-controller -n kube-system
+
+      - name: Delete serviceaccount
+        id: delete-sa 
+        run: kubectl delete serviceaccount aws-load-balancer-controller -n kube-system
 
       - name: Terraform Init
         id: init

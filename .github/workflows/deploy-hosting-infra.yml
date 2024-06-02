@@ -47,3 +47,16 @@ jobs:
         if: github.ref == 'refs/heads/main'
         id: apply
         run: terraform apply -input=false -no-color -auto-approve 
+
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+
+      - name: Create serviceaccount for load balancer
+        id: create-sa
+        run: |
+          kubectl create serviceaccount aws-load-balancer-controller -n kube-system
+          kubectl annotate serviceaccount aws-load-balancer-controller -n kube-system eks.amazonaws.com/role-arn=${{ secrets.LOADBALANCER_ROLE_ARN }}
+
+
+
