@@ -51,7 +51,6 @@ resource "aws_subnet" "public-eu-west-2c" {
 
   tags = {
     "kubernetes.io/cluster/webapp-eks-cluster" = "shared"
-    "kubernetes.io/role/elb"               = "1"
   }
 }
 
