@@ -40,7 +40,7 @@ jobs:
   
       - name: Set loadbalancer dns name TF variable
         id: set-lv-var
-        run: kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' | xargs -I {} export TF_VAR_loadbalancer_dns_name={}
+        run: export TF_VAR_loadbalancer_dns_name=$(kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
       - name: Test step
         id: test
