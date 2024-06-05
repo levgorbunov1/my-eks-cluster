@@ -34,19 +34,31 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
           aws-region: eu-west-2
 
-      - name: Terraform Init
-        id: init
-        run: ls -latr; terraform init -input=false -no-color
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+  
+      - name: Set loadbalancer dns name TF variable
+        id: set-lv-var
+        run: kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' | xargs -I {} export TF_VAR_loadbalancer_dns_name={}
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -input=false -no-color
-        continue-on-error: false
+      - name: Test step
+        id: test
+        run: echo $TF_VAR_loadbalancer_dns_name
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        id: apply
-        run: terraform apply -input=false -no-color -auto-approve 
+    #   - name: Terraform Init
+    #     id: init
+    #     run: ls -latr; terraform init -input=false -no-color
+
+    #   - name: Terraform Plan
+    #     id: plan
+    #     run: terraform plan -input=false -no-color
+    #     continue-on-error: false
+
+    #   - name: Terraform Apply
+    #     if: github.ref == 'refs/heads/main'
+    #     id: apply
+    #     run: terraform apply -input=false -no-color -auto-approve 
 
 
 
