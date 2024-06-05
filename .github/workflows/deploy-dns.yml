@@ -1,0 +1,64 @@
+name: "Deploy DNS infra"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "dns-infra/**"
+    branches:
+      - main
+      
+env:
+    TERRAFORM_VERSION: "1.6.6"
+
+jobs:
+  deploy-hosting-infra:
+    name: "Deploy DNS infra"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    defaults:
+      run:
+        working-directory: "dns-infra"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Configure AWS Credentials for Infra Account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
+          aws-region: eu-west-2
+
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+  
+      - name: Set loadbalancer dns name TF variable
+        id: set-lv-var
+        run: kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' | xargs -I {} export TF_VAR_loadbalancer_dns_name={}
+
+      - name: Test step
+        id: test
+        run: echo $TF_VAR_loadbalancer_dns_name
+
+    #   - name: Terraform Init
+    #     id: init
+    #     run: ls -latr; terraform init -input=false -no-color
+
+    #   - name: Terraform Plan
+    #     id: plan
+    #     run: terraform plan -input=false -no-color
+    #     continue-on-error: false
+
+    #   - name: Terraform Apply
+    #     if: github.ref == 'refs/heads/main'
+    #     id: apply
+    #     run: terraform apply -input=false -no-color -auto-approve 
+
+
+
