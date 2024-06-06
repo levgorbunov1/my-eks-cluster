@@ -50,9 +50,7 @@ jobs:
 
       - name: state surgery
         id: state-surgery
-        run: |
-          terraform state rm 'aws_route53_record.webapp_route53_a_record'
-          terraform import aws_route53_record.webapp_route53_cname_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_CNAME
+        run: terraform import aws_route53_record.webapp_route53_cname_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_CNAME
 
       - name: Terraform Plan
         id: plan
