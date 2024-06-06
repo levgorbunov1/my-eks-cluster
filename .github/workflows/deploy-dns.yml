@@ -48,15 +48,11 @@ jobs:
         id: init
         run: ls -latr; terraform init -input=false -no-color
 
-      # - name: Import hosted zone
-      #   id: import-zone
-      #   run: terraform import aws_route53_zone.webapp_route53_zone ${{ secrets.HZ_ID }}
-
-      - name: Import dns records
-        id: import-dns-records
-        run: | 
-          terraform import aws_route53_record.webapp_route53_NS_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_NS
-          terraform import aws_route53_record.webapp_route53_SOA_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_SOA
+      - name: Import hosted zone
+        id: import-zone
+        run: |
+          terraform state rm 'aws_route53_zone.webapp_route53_zone'
+          terraform import aws_route53_zone.webapp_route53_zone ${{ secrets.HZ_ID }}
 
       - name: Terraform Plan
         id: plan
