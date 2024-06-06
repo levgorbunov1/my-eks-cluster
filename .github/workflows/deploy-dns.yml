@@ -48,10 +48,6 @@ jobs:
         id: init
         run: ls -latr; terraform init -input=false -no-color
 
-      - name: state surgery
-        id: state-surgery
-        run: terraform import aws_route53_record.webapp_route53_cname_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_CNAME
-
       - name: Terraform Plan
         id: plan
         run: terraform plan -input=false -no-color
