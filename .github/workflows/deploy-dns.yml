@@ -46,6 +46,10 @@ jobs:
         id: init
         run: ls -latr; terraform init -input=false -no-color
 
+      - name: Import hosted zone
+        id: import-zone
+        run: terraform import aws_route53_zone.webapp_route53_zone ${{ secrets.HZ_ID }}
+
       - name: Terraform Plan
         id: plan
         run: terraform plan -input=false -no-color
