@@ -36,13 +36,13 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
           aws-region: eu-west-2
 
-      # - name: Connect to cluster
-      #   id: cluster-connect
-      #   run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
   
-      # - name: Set loadbalancer dns name TF variable
-      #   id: set-lv-var
-      #   run: echo "TF_VAR_loadbalancer_dns_name=$(kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $GITHUB_ENV
+      - name: Set loadbalancer dns name TF variable
+        id: set-lv-var
+        run: echo "TF_VAR_loadbalancer_dns_name=$(kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $GITHUB_ENV
 
       - name: Terraform Init
         id: init
