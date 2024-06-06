@@ -10,6 +10,8 @@ on:
       
 env:
     TERRAFORM_VERSION: "1.6.6"
+    TF_VAR_nameservers: ${{ secrets.NAMESERVERS }}
+    TF_VAR_SOA_record: ${{ secrets.SOA_RECORDS }}
 
 jobs:
   deploy-hosting-infra:
@@ -49,6 +51,12 @@ jobs:
       - name: Import hosted zone
         id: import-zone
         run: terraform import aws_route53_zone.webapp_route53_zone ${{ secrets.HZ_ID }}
+
+      - name: Import dns records
+        id: import-dns-records
+        run: | 
+          terraform import aws_route53_record.webapp_route53_NS_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_NS
+          terraform import aws_route53_record.webapp_route53_SOA_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_SOA
 
       - name: Terraform Plan
         id: plan
