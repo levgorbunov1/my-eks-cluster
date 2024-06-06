@@ -22,7 +22,7 @@ resource "aws_route53_record" "webapp_route53_NS_record" {
 }
 
 # A record pointing to LB
-resource "aws_route53_record" "webapp_route53_a_record" {
+resource "aws_route53_record" "webapp_route53_cname_record" {
   zone_id = aws_route53_zone.webapp_route53_zone.zone_id
   name    = var.domain
   type    = "CNAME"
