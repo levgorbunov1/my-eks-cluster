@@ -24,7 +24,7 @@ resource "aws_route53_record" "webapp_route53_NS_record" {
 # A record pointing to LB
 resource "aws_route53_record" "webapp_route53_cname_record" {
   zone_id = aws_route53_zone.webapp_route53_zone.zone_id
-  name    = var.domain
+  name    = "www.${var.domain}"
   type    = "CNAME"
   ttl     = 300
   records = ["google.com"]
