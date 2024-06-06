@@ -44,15 +44,15 @@ jobs:
       #   id: set-lv-var
       #   run: echo "TF_VAR_loadbalancer_dns_name=$(kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $GITHUB_ENV
 
+      - name: Terraform Init
+        id: init
+        run: ls -latr; terraform init -input=false -no-color
+
       - name: state surgery
         id: state-surgery
         run: |
           terraform state rm 'aws_route53_record.webapp_route53_a_record'
           terraform import aws_route53_record.webapp_route53_cname_record ${{ secrets.HZ_ID }}_lev-the-dev.co.uk_CNAME
-
-      - name: Terraform Init
-        id: init
-        run: ls -latr; terraform init -input=false -no-color
 
       - name: Terraform Plan
         id: plan
