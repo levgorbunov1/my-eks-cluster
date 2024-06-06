@@ -3,7 +3,7 @@ resource "aws_route53_zone" "webapp_route53_zone" {
   name = var.domain
 }
 
-# SOA record will need to be imported
+# SOA record
 resource "aws_route53_record" "webapp_route53_SOA_record" {
   zone_id = aws_route53_zone.webapp_route53_zone.zone_id
   name    = var.domain
@@ -12,7 +12,7 @@ resource "aws_route53_record" "webapp_route53_SOA_record" {
   records = [var.SOA_record]
 }
 
-# NS record - will need to be imported
+# NS record
 resource "aws_route53_record" "webapp_route53_NS_record" {
   zone_id = aws_route53_zone.webapp_route53_zone.zone_id
   name    = var.domain
@@ -22,10 +22,14 @@ resource "aws_route53_record" "webapp_route53_NS_record" {
 }
 
 # A record pointing to LB
-resource "aws_route53_record" "webapp_route53_cname_record" {
+resource "aws_route53_record" "webapp_route53_alias_record" {
   zone_id = aws_route53_zone.webapp_route53_zone.zone_id
-  name    = "www.${var.domain}"
-  type    = "CNAME"
-  ttl     = 300
-  records = [var.loadbalancer_dns_name]
+  name    = var.domain
+  type    = "A"
+
+  alias {
+    name                   = var.loadbalancer_dns_name
+    zone_id                = "Z3GKZC51ZF0DB4"
+    evaluate_target_health = true
+  }
 }
