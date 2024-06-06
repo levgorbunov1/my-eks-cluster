@@ -1,7 +1,7 @@
 # LB name populated on deploy
 variable "loadbalancer_dns_name" {
   type    = string
-  default = ""
+  default = "google.com"
 }
 
 # domain name

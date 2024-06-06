@@ -27,5 +27,5 @@ resource "aws_route53_record" "webapp_route53_cname_record" {
   name    = "www.${var.domain}"
   type    = "CNAME"
   ttl     = 300
-  records = ["google.com"]
+  records = [var.loadbalancer_dns_name]
 }
