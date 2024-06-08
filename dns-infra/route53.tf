@@ -29,7 +29,7 @@ resource "aws_route53_record" "webapp_route53_alias_record" {
 
   alias {
     name                   = var.loadbalancer_dns_name
-    zone_id                = "ZD4D7Y8KGAS4G"
+    zone_id                = "ZHURV8PSTC4K8"
     evaluate_target_health = true
   }
 }
