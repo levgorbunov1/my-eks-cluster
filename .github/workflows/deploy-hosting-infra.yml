@@ -61,8 +61,9 @@ jobs:
       - name: Create serviceaccount for cert manager
         id: create-cert-manager-sa
         run: |
-          kubectl create serviceaccount cert-manager -n my-webapp
-          kubectl annotate serviceaccount cert-manager -n my-webapp eks.amazonaws.com/role-arn=${{ secrets.CERT_MANAGER_ROLE_ARN }}
+          kubectl create namespace cert-manager
+          kubectl create serviceaccount cert-manager -n cert-manager
+          kubectl annotate serviceaccount cert-manager -n cert-manager eks.amazonaws.com/role-arn=${{ secrets.CERT_MANAGER_ROLE_ARN }}
 
 
 
