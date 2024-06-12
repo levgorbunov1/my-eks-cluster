@@ -45,8 +45,7 @@ jobs:
       - name: Deploy Certificates
         id: deploy-certificates
         run: |
-            envsubst < cluster-issuer.yml | kubectl apply -f -
-            kubectl apply -f certificate.yml
+            envsubst < certificate.yml | kubectl apply -f -
             kubectl patch ingress webapp-ingress -n my-webapp -p '{"spec":{"tls":[{"hosts":["lev-the-dev.co.uk"],"secretName":"ssl-certificate"}]}}'
 
 

@@ -1,3 +1,30 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: route53-secret
+type: Opaque
+stringData:
+  secret-token: <base64 encoded secret access key>
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+  namespace: my-webapp
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ${DEVELOPER_EMAIL}
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - dns01:
+        route53:
+          accessKeyID: <access key>
+          secretAccessKeySecretRef:
+            name: route53-secret
+            key: secret-token
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
