@@ -38,9 +38,8 @@ jobs:
           kubectl create namespace cert-manager
           helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.11.0 --set installCRDs=true
 
-      - name: Deploy app
-        working-directory: "deployment-infra"
-        id: deploy-app
+      - name: Deploy Certificates
+        id: deploy-certificates
         run: |
             envsubst < cluster-issuer.yml | kubectl apply -f -
             kubectl apply -f certificate.yml
