@@ -43,7 +43,7 @@ jobs:
             --set region=eu-west-2 \
             --set vpcId=$(aws ec2 describe-vpcs --filters "Name=cidr,Values=10.0.0.0/16" --query 'Vpcs[0].VpcId' --output text) \
             --set serviceAccount.name=aws-load-balancer-controller
-          
+
       - name: Deploy app
         working-directory: "deployment-infra"
         id: deploy-app
@@ -52,7 +52,6 @@ jobs:
           kubectl apply -f namespace.yml -f service.yml -f ingress.yml
           envsubst < deployment.yml | kubectl apply -f -
           sleep 20
-          kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
 
 
 

@@ -10,7 +10,8 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - http:
+    - host: lev-the-dev.co.uk
+      http:
         paths:
           - path: /
             pathType: Prefix
