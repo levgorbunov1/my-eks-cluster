@@ -1,0 +1,49 @@
+name: "Deploy SSL"
+
+on:
+  workflow_dispatch:
+      
+env:
+    DEVELOPER_EMAIL: ${{ secrets.DEVELOPER_EMAIL }}
+
+jobs:
+  deploy-ssl:
+    name: "Deploy SSL"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    defaults:
+      run:
+        working-directory: "deployment-infra"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials for Infra Account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
+          aws-region: eu-west-2
+
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+
+      - name: Deploy Cert Manager
+        id: deploy-cert-manager
+        run: |
+          helm repo add jetstack https://charts.jetstack.io
+          helm repo update
+          kubectl create namespace cert-manager
+          helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.11.0 --set installCRDs=true
+
+      - name: Deploy app
+        working-directory: "deployment-infra"
+        id: deploy-app
+        run: |
+            envsubst < cluster-issuer.yml | kubectl apply -f -
+            kubectl apply -f certificate.yml
+
+
+
