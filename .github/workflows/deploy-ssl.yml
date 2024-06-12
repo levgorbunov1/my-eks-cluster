@@ -43,6 +43,7 @@ jobs:
         run: |
             envsubst < cluster-issuer.yml | kubectl apply -f -
             kubectl apply -f certificate.yml
+            kubectl patch ingress webapp-ingress -n my-webapp -p '{"spec":{"tls":[{"hosts":["lev-the-dev.co.uk"],"secretName":"ssl-certificate"}]}}'
 
 
 
