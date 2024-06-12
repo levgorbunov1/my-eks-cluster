@@ -9,13 +9,18 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
   ingressClassName: alb
+  tls:
+  - hosts:
+    - lev-the-dev.co.uk
+    secretName: ssl-certificate
   rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: webapp-service
-                port:
-                  number: 80
+  - host: lev-the-dev.co.uk
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: webapp-service
+            port:
+              number: 80
