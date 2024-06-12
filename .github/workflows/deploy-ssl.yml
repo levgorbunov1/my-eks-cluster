@@ -5,6 +5,7 @@ on:
       
 env:
     DEVELOPER_EMAIL: ${{ secrets.DEVELOPER_EMAIL }}
+    CERT_MANAGER_ROLE_ARN: ${{ secrets.CERT_MANAGER_ROLE_ARN }}
 
 jobs:
   deploy-ssl:
