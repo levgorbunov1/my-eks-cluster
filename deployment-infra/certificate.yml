@@ -1,4 +1,21 @@
 apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+  namespace: my-webapp
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ${DEVELOPER_EMAIL}
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - dns01:
+        route53:
+          region: eu-west-2
+          role: ${CERT_MANAGER_ROLE_ARN}
+---
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: ssl-certificate

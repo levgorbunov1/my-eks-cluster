@@ -32,7 +32,11 @@ resource "aws_iam_policy" "cert_manager_iam_policy" {
                 "acm:RequestCertificate",
                 "acm:DescribeCertificate",
                 "acm:ListCertificates",
-                "acm:GetCertificate"
+                "acm:GetCertificate",
+                "route53:GetChange",
+                "route53:ChangeResourceRecordSets",
+                "route53:ListResourceRecordSets",
+                "route53:ListHostedZonesByName"
             ],
             "Resource": "*"
         }
