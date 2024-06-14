@@ -61,13 +61,4 @@ jobs:
           kubectl annotate serviceaccount aws-load-balancer-controller -n kube-system eks.amazonaws.com/role-arn=${{ secrets.LOADBALANCER_ROLE_ARN }}
         continue-on-error: true
 
-      - name: Create serviceaccount for cert manager
-        if: github.ref == 'refs/heads/main'
-        id: create-cert-manager-sa
-        run: |
-          kubectl create namespace cert-manager
-          kubectl create serviceaccount cert-manager -n cert-manager
-          kubectl annotate serviceaccount cert-manager -n cert-manager eks.amazonaws.com/role-arn=${{ secrets.CERT_MANAGER_ROLE_ARN }}
-
-
 
