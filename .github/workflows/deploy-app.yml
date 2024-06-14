@@ -49,8 +49,7 @@ jobs:
         id: deploy-app
         run: |
           sleep 30
-          kubectl apply -f namespace.yml -f service.yml
-          envsubst < ingress.yml | kubectl apply -f -
+          kubectl apply -f namespace.yml -f service.yml -f ingress.yml
           envsubst < deployment.yml | kubectl apply -f -
           sleep 20
           kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
