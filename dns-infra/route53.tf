@@ -44,12 +44,15 @@ resource "aws_acm_certificate" "webapp_route53_alias_record" {
 }
 
 resource "aws_route53_record" "cert_validation" {
-  allow_overwrite = true
-  name            = aws_acm_certificate.webapp_route53_alias_record.domain_validation_options.0.resource_record_name
-  records         = [aws_acm_certificate.webapp_route53_alias_record.domain_validation_options.0.resource_record_value]
-  type            = aws_acm_certificate.webapp_route53_alias_record.domain_validation_options.0.resource_record_type
-  zone_id         = aws_route53_zone.webapp_route53_zone.zone_id
-  ttl             = 60
+  count = length(aws_acm_certificate.webapp_route53_alias_record.domain_validation_options)
+
+  zone_id = aws_route53_zone.webapp_route53_zone.zone_id
+  name    = aws_acm_certificate.webapp_route53_alias_record.domain_validation_options[count.index].resource_record_name
+  type    = aws_acm_certificate.webapp_route53_alias_record.domain_validation_options[count.index].resource_record_type
+  ttl     = 60
+  records = [
+    aws_acm_certificate.webapp_route53_alias_record.domain_validation_options[count.index].resource_record_value
+  ]
 }
 
 resource "aws_acm_certificate_validation" "cert" {
