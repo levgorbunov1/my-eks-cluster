@@ -33,3 +33,16 @@ resource "aws_route53_record" "webapp_route53_alias_record" {
     evaluate_target_health = true
   }
 }
+
+# ACM SSL configuration
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 4.0"
+
+  domain_name  = var.domain
+  zone_id      = aws_route53_zone.webapp_route53_zone.zone_id
+
+  validation_method = "DNS"
+
+  wait_for_validation = true
+}
