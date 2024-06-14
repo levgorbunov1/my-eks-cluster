@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "external_dns_assume_role_policy" {
 }
 
 resource "aws_iam_policy" "external_dns_iam_policy" {
-  name   = "CertManagerIAMPolicy"
+  name   = "ExternalDNSIAMPolicy"
   policy = jsonencode({
   "Version": "2012-10-17",
   "Statement": [
