@@ -1,8 +1,8 @@
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
-  namespace: my-webapp
+  namespace: cert-manager
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -13,7 +13,6 @@ spec:
     - dns01:
         route53:
           region: eu-west-2
-          role: ${CERT_MANAGER_ROLE_ARN}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -24,7 +23,7 @@ spec:
   secretName: ssl-certificate
   issuerRef:
     name: letsencrypt-prod
-    kind: Issuer
+    kind: ClusterIssuer
   commonName: lev-the-dev.co.uk
   dnsNames:
   - lev-the-dev.co.uk
