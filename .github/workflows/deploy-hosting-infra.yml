@@ -69,5 +69,12 @@ jobs:
           kubectl create serviceaccount cert-manager -n cert-manager
           kubectl annotate serviceaccount cert-manager -n cert-manager eks.amazonaws.com/role-arn=${{ secrets.CERT_MANAGER_ROLE_ARN }}
 
+      - name: Create serviceaccount for external dns
+        if: github.ref == 'refs/heads/main'
+        id: create-external-dns-sa
+        run: |
+            kubectl create serviceaccount external-dns -n kube-system
+            kubectl annotate serviceaccount external-dns -n kube-system eks.amazonaws.com/role-arn=${{ secrets.EXTERNAL_DNS_ROLE_ARN }}
+
 
 

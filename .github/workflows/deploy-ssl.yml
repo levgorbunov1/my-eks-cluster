@@ -43,11 +43,24 @@ jobs:
             --set serviceAccount.create=false \
             --set serviceAccount.name=cert-manager
 
+      - name: Deploy External DNS
+        id: deploy-external-dns
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm install external-dns bitnami/external-dns \
+            --namespace kube-system \
+            --set provider=aws \
+            --set aws.region=eu-west-2 \
+            --set policy=sync \
+            --set interval=1m \
+            --set affinity.nodeAffinity.label.labelKey=labelValue \
+            --set serviceAccount.create=false \
+            --set serviceAccount.name=external-dns
+
       - name: Deploy Certificates
         id: deploy-certificates
         run: |
             envsubst < certificate.yml | kubectl apply -f -
-            kubectl patch ingress webapp-ingress -n my-webapp -p '{"spec":{"tls":[{"hosts":["lev-the-dev.co.uk"],"secretName":"ssl-certificate"}]}}'
 
 
 
