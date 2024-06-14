@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "cert_manager_assume_role_policy" {
     condition {
       test     = "StringEquals"
       variable = "${replace(aws_iam_openid_connect_provider.cluster_oidc_provider.url, "https://", "")}:sub"
-      values   = ["system:serviceaccount:kube-system:cert-manager"]
+      values   = ["system:serviceaccount:cert-manager:cert-manager"]
     }
 
     principals {
