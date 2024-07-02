@@ -1,0 +1,29 @@
+name: learn-github-actions
+on:
+  workflow_dispatch:
+    
+jobs:
+  test_workflow_1:
+    runs-on: [self-hosted, ephemeral-demo]
+    steps:
+      - run: echo hi there
+  test_workflow_2:
+    runs-on: [self-hosted, ephemeral-demo]
+    steps:
+      - run: echo hi there
+  test_workflow_3:
+    runs-on: [self-hosted, ephemeral-demo]
+    steps:
+      - run: echo hi there
+  test_workflow_4:
+    runs-on: [self-hosted, ephemeral-demo]
+    steps:
+      - run: echo hi there
+  test_workflow_5:
+    runs-on: [self-hosted, ephemeral-demo]
+    steps:
+      - run: echo hi there
+  test_workflow_6:
+    runs-on: [self-hosted, ephemeral-demo]
+    steps:
+      - run: echo hi there
