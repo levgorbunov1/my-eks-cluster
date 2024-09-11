@@ -1,4 +1,4 @@
-name: "Deploy DNS infra"
+name: "4. Deploy DNS infra"
 
 on:
   workflow_dispatch:

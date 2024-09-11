@@ -1,4 +1,4 @@
-name: "Deploy hosting infra"
+name: "1. Deploy hosting infra"
 
 on:
   workflow_dispatch:

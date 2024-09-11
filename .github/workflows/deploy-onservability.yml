@@ -1,0 +1,41 @@
+name: "Deploy Observability"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-observability:
+    name: "Deploy Observability"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials for Infra Account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CICD_ROLE }}
+          aws-region: eu-west-2
+
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+
+      - name: Deploy Prometheus and Grafana
+        id: deploy-prometheus
+        run: |
+          kubectl create namespace prometheus
+
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+
+          helm install prometheus prometheus-community/kube-prometheus-stack --namespace prometheus
+
+
+
+    
+
+    
