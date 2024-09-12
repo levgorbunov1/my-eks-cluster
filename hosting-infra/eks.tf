@@ -8,7 +8,6 @@ resource "aws_eks_cluster" "eks_cluster" {
       aws_subnet.private-eu-west-2b.id,
       aws_subnet.public-eu-west-2c.id,
     ]
-    security_group_ids = [aws_security_group.eks_security_group.id]
   }
 
   depends_on = [aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy]
@@ -41,24 +40,3 @@ resource "aws_eks_node_group" "eks_node_group" {
   instance_types = ["t3.medium"]
 }
 
-resource "aws_security_group" "eks_security_group" {
-  vpc_id = aws_vpc.eks_vpc.id
-
-  ingress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    self = true 
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    "karpenter.sh/discovery" = "eks-default-sg"
-  }
-}
