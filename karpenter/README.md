@@ -9,7 +9,7 @@ helm template karpenter oci://public.ecr.aws/karpenter/karpenter --version v0.29
     --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="arn:aws:iam::368155700659:role/KarpenterControllerRole-webapp-eks-cluster" > karpenter.yaml
 ```
 
-1. Tag eks node security group with: "karpenter.sh/discovery = webapp-eks-cluster"v
+1. Tag eks node security group with: "karpenter.sh/discovery = webapp-eks-cluster"
 2. Update configmap to allow Karpenter Nodes to join cluster `kubectl edit configmap aws-auth -n kube-system` 
 and add the following: 
 
