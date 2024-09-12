@@ -1,0 +1,42 @@
+name: "Deploy Karpenter"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-karpenter:
+    name: "Deploy Karpenter"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials for Infra Account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_CICD_ROLE }}
+          aws-region: eu-west-2
+
+      - name: Connect to cluster
+        id: cluster-connect
+        run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
+
+      - name: Deploy Karpenter
+        id: deploy-karpenter
+        run: |
+            kubectl create namespace karpenter
+
+            kubectl create -f https://raw.githubusercontent.com/aws/karpenter/v0.29.0/pkg/apis/crds/karpenter.sh_provisioners.yaml &&\
+            kubectl create -f https://raw.githubusercontent.com/aws/karpenter/v0.29.0/pkg/apis/crds/karpenter.k8s.aws_awsnodetemplates.yaml &&\
+            kubectl create -f https://raw.githubusercontent.com/aws/karpenter/v0.29.0/pkg/apis/crds/karpenter.sh_machines.yaml 
+
+            kubectl apply -f karpenter
+
+
+
+    
+
+    
