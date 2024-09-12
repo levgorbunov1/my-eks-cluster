@@ -1,1 +1,3 @@
-Needs to be applied from local machine, as it creates github actions oidc configuration and IAM role required for CICD pipelines.
+## AWS Account Configuration
+
+OIDC configuration and IAM role for GitHub Actions runner to assume.
