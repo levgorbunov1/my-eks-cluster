@@ -32,10 +32,6 @@ resource "aws_eks_node_group" "eks_node_group" {
     aws_subnet.private-eu-west-2b.id
   ]
 
-  remote_access {
-    source_security_group_ids = [aws_security_group.eks_security_group.id]
-  }
-
   scaling_config {
     desired_size = 1
     max_size = 2
