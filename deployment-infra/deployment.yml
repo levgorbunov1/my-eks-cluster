@@ -86,6 +86,7 @@ metadata:
 provisioner: ebs.csi.aws.com
 parameters:
   type: gp2
+  encrypted: "true"
   fsType: ext4
 ---
 apiVersion: v1
