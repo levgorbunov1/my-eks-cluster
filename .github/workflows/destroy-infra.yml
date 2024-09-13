@@ -29,14 +29,6 @@ jobs:
           role-to-assume: ${{ secrets.AWS_CICD_ROLE}}
           aws-region: eu-west-2
 
-      - name: Delete ECR images
-        id: delete-ecr-image
-        run: |
-          aws ecr batch-delete-image --region eu-west-2 \
-          --repository-name webapp_ecr \
-          --image-ids "$(aws ecr list-images --region eu-west-2 --repository-name webapp_ecr --query 'imageIds[*]' --output json)"
-        continue-on-error: true
-
       - name: Connect to cluster
         id: cluster-connect
         run: aws eks update-kubeconfig --region eu-west-2 --name webapp-eks-cluster
