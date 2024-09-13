@@ -37,7 +37,7 @@ jobs:
       - name: Delete kubernetes infrastructure
         id: delete-k8s
         run: |
-          kubectl delete ingress webapp-ingress -n my-webapp
+          kubectl delete ingress wordpress-ingress -n wordpress
           helm delete aws-load-balancer-controller -n kube-system
           helm delete prometheus -n prometheus
         continue-on-error: true
