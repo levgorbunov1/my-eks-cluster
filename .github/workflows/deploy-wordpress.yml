@@ -1,4 +1,4 @@
-name: "3. Deploy Wordpress"
+name: "2. Deploy Wordpress"
 
 on:
   workflow_dispatch:
