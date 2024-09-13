@@ -42,7 +42,7 @@ jobs:
   
       - name: Set loadbalancer dns name TF variable
         id: set-lv-var
-        run: echo "TF_VAR_loadbalancer_dns_name=$(kubectl get ingress webapp-ingress -n my-webapp -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $GITHUB_ENV
+        run: echo "TF_VAR_loadbalancer_dns_name=$(kubectl get ingress wordpress-ingress -n wordpress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> $GITHUB_ENV
 
       - name: Terraform Init
         id: init
