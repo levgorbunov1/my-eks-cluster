@@ -23,5 +23,5 @@ data "aws_iam_policy_document" "csi_driver_assume_role_policy" {
 
 resource "aws_iam_role_policy_attachment" "csi_driver_iam_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-  role       = aws_iam_role.csi_driver_service_account_role
+  role       = aws_iam_role.csi_driver_service_account_role.name
 }
