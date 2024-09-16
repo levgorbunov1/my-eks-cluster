@@ -49,9 +49,8 @@ jobs:
 
           helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
             -n kube-system \
-            --set serviceAccount.create=false \
-            --set serviceAccount.name=csi-driver \
             --set region=eu-west-2
+            --set controller.serviceAccount.name=csi-driver
 
       - name: Deploy ingress controller
         id: deploy-ingress-controller
