@@ -23,6 +23,17 @@ resource "aws_iam_openid_connect_provider" "cluster_oidc_provider" {
   url             = data.tls_certificate.eks_cluster_certificate.url
 }
 
+resource "aws_launch_template" "eks_node_launch_template" {
+  instance_type = "t3.medium"
+  name_prefix   = "${var.node_group_name}-lt-"
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens = "required"
+    http_put_response_hop_limit = 3
+  }
+}
+
 resource "aws_eks_node_group" "eks_node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = var.node_group_name
@@ -37,6 +48,9 @@ resource "aws_eks_node_group" "eks_node_group" {
     min_size = 1
   }
 
-  instance_types = ["t3.medium"]
+  launch_template {
+    id      = aws_launch_template.eks_node_launch_template.id
+    version = "$Latest"
+  }
 }
 
