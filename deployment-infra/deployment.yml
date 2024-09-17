@@ -30,7 +30,7 @@ spec:
             - name: WORDPRESS_DB_NAME
               value: ${MYSQL_DATABASE}
             - name: WORDPRESS_DEBUG
-              value: "true"
+              value: "false"
           ports:
             - containerPort: 80
           readinessProbe:
