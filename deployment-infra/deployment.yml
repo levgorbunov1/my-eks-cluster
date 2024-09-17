@@ -106,6 +106,7 @@ kind: StorageClass
 metadata:
   name: ebs-storage
 provisioner: ebs.csi.aws.com
+reclaimPolicy: Retain
 parameters:
   type: gp2
   encrypted: "true"
