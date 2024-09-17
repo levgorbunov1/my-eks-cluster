@@ -35,17 +35,29 @@ spec:
             - containerPort: 80
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthcheck.php
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 10
           volumeMounts:
             - name: wordpress-persistent-storage
               mountPath: /var/www/html
+            - name: healthcheck-volume
+              mountPath: /var/www/html/healthcheck.php
+              subPath: healthcheck.php
+      initContainers:
+        - name: init-healthcheck
+          image: busybox
+          command: ['sh', '-c', "echo \"<?php header('Content-Type: text/plain'); echo 'OK'; ?>\" > /healthcheck/healthcheck.php"]
+          volumeMounts:
+          - name: healthcheck-volume
+            mountPath: /healthcheck
       volumes:
         - name: wordpress-persistent-storage
           persistentVolumeClaim:
             claimName: wordpress-pvc
+        - name: healthcheck-volume
+          emptyDir: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
