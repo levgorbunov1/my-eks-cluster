@@ -8,6 +8,8 @@ env:
   MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
   MYSQL_USER: ${{ secrets.MYSQL_USER }}
   MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+  WORDPRESS_VOLUME_ID: ${{ secrets.WORDPRESS_VOLUME_ID }}
+  MYSQL_VOLUME_ID: ${{ secrets.MYSQL_VOLUME_ID }}
 
 jobs:
   deploy-wordpress:
