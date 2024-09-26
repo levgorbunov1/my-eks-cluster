@@ -20,6 +20,13 @@ spec:
       containers:
         - name: wordpress
           image: wordpress:php8.3-apache
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           env:
             - name: WORDPRESS_DB_HOST
               value: mysql-service:3306
@@ -80,6 +87,13 @@ spec:
       containers:
         - name: mysql
           image: mysql:5.7
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
           args:
             - "--ignore-db-dir=lost+found"
           env:
