@@ -27,13 +27,6 @@ resource "aws_launch_template" "eks_node_launch_template" {
   instance_type = "t3.medium"
   name_prefix   = "${var.node_group_name}-lt-"
 
-  user_data = <<-EOF
-              #!/bin/bash
-              echo "EKS worker node configuration"
-              # Modify the kubelet configuration to increase the max-pods
-              sed -i 's/^KUBELET_EXTRA_ARGS=.*/KUBELET_EXTRA_ARGS=--max-pods=30/' /etc/eks/bootstrap.sh
-              EOF
-
   metadata_options {
     http_endpoint = "enabled"
     http_tokens = "required"
