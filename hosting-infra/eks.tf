@@ -24,7 +24,7 @@ resource "aws_iam_openid_connect_provider" "cluster_oidc_provider" {
 }
 
 resource "aws_launch_template" "eks_node_launch_template" {
-  instance_type = "t3.large"
+  instance_type = "t3.medium"
   name_prefix   = "${var.node_group_name}-lt-"
 
   metadata_options {
