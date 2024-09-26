@@ -10,6 +10,7 @@ env:
   MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
   WORDPRESS_VOLUME_ID: ${{ secrets.WORDPRESS_VOLUME_ID }}
   MYSQL_VOLUME_ID: ${{ secrets.MYSQL_VOLUME_ID }}
+  ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
 
 jobs:
   deploy-wordpress:
@@ -74,7 +75,8 @@ jobs:
         id: deploy-wordpress
         run: |
           sleep 30
-          kubectl apply -f namespace.yml -f service.yml -f ingress.yml
+          kubectl apply -f namespace.yml -f service.yml
+          envsubst < ingress.yml | kubectl apply -f -
           envsubst < deployment.yml | kubectl apply -f -
           sleep 20
           kubectl get ingress wordpress-ingress -n wordpress -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
