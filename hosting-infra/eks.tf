@@ -52,5 +52,36 @@ resource "aws_eks_node_group" "eks_node_group" {
     id      = aws_launch_template.eks_node_launch_template.id
     version = "$Latest"
   }
+
+  remote_access {
+    ec2_ssh_key = var.ssh_key_name
+    source_security_group_ids = [aws_security_group.node_group_sg.id]
+  }
 }
 
+resource "aws_security_group" "node_group_sg" {
+  name        = "node_group_sg"
+  description = "Security group for node group"
+  vpc_id      = aws_vpc.eks_vpc.id 
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip]
+  }
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    self        = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
