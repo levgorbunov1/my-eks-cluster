@@ -8,6 +8,7 @@ resource "aws_eks_cluster" "eks_cluster" {
       aws_subnet.private-eu-west-2b.id,
       aws_subnet.public-eu-west-2c.id,
     ]
+    security_group_ids = [aws_security_group.node_group_sg.id]
   }
 
   depends_on = [aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy]
@@ -26,6 +27,12 @@ resource "aws_iam_openid_connect_provider" "cluster_oidc_provider" {
 resource "aws_launch_template" "eks_node_launch_template" {
   instance_type = "t3.medium"
   name_prefix   = "${var.node_group_name}-lt-"
+  key_name = aws_key_pair.eks_cluster_ssh_key.key_name
+
+  network_interfaces {
+    security_groups = [aws_security_group.node_group_sg.id]
+    associate_public_ip_address = true
+  }
 
   metadata_options {
     http_endpoint = "enabled"
@@ -52,36 +59,5 @@ resource "aws_eks_node_group" "eks_node_group" {
     id      = aws_launch_template.eks_node_launch_template.id
     version = "$Latest"
   }
-
-  remote_access {
-    ec2_ssh_key = var.ssh_key_name
-    source_security_group_ids = [aws_security_group.node_group_sg.id]
-  }
 }
 
-resource "aws_security_group" "node_group_sg" {
-  name        = "node_group_sg"
-  description = "Security group for node group"
-  vpc_id      = aws_vpc.eks_vpc.id 
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
-  }
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    self        = true
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}

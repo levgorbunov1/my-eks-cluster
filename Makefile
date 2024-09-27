@@ -11,3 +11,5 @@ forward-grafana-port:
 	echo password: $$(kubectl get secret -n prometheus prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo)
 	kubectl port-forward -n prometheus pod/$$(kubectl get pods -o custom-columns=:metadata.name -n prometheus | grep prometheus-grafana) 3000:3000
 
+ssh:
+	ssh -i ~/.ssh/id_rsa root@$$(kubectl get nodes -o json | jq -r '.items[] | select(.status.addresses[]?.type == "ExternalIP") | .status.addresses[] | select(.type == "ExternalIP") | .address')
