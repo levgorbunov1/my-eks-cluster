@@ -27,20 +27,6 @@ resource "aws_launch_template" "eks_node_launch_template" {
   instance_type = "t3.medium"
   name_prefix   = "${var.node_group_name}-lt-"
 
-  user_data = base64encode(<<-EOF
-    MIME-Version: 1.0
-    Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
-
-    --==MYBOUNDARY==
-    Content-Type: text/x-shellscript; charset="us-ascii"
-
-    #!/bin/bash
-    /etc/eks/bootstrap.sh ${aws_eks_cluster.eks_cluster.name} --use-max-pods false --kubelet-extra-args '--max-pods=30'
-
-    --==MYBOUNDARY==--
-  EOF
-  )
-
   metadata_options {
     http_endpoint = "enabled"
     http_tokens = "required"
