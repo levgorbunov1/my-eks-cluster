@@ -24,4 +24,5 @@ variable "public_ssh_key" {
 variable "my_ip" {
   description = "my ip address"
   type = string
+  default = "0.0.0.0/0"
 }
