@@ -5,6 +5,7 @@ on:
 
 env:
     TERRAFORM_VERSION: "1.6.6"
+    TF_VAR_public_ssh_key: ${{ secrets.PUBLIC_SSH_KEY }}
 
 jobs:
   destroy-hosting-infra:
