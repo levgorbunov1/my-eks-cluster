@@ -1,5 +1,5 @@
 # Personal EKS Cluster
-- Built an EKS cluster using Terraform; configured VPC for EKS.
+- Built a multi-node EKS cluster using Terraform; configured VPC for EKS.
 - Deployed aws-load-balancer-controller to the cluster to manage Application Load Balancers for Kubernetes ingress.
 - Deployed ebs-csi-driver to dynamically provision EBS volumes.
 - Deployed Karpenter to the cluster to enable ephemerality of Kubernetes nodes.
