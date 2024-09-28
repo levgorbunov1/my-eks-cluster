@@ -59,5 +59,9 @@ resource "aws_eks_node_group" "eks_node_group" {
     id      = aws_launch_template.eks_node_launch_template.id
     version = "$Latest"
   }
+
+  labels = {
+    account = "levg"
+  }
 }
 
