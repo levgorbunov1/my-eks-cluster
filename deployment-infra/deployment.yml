@@ -140,7 +140,7 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: ebs-storage
-  volumeName: wordpress-pv
+  # volumeName: wordpress-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -156,44 +156,44 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: ebs-storage
-  volumeName: mysql-pv
+  # volumeName: mysql-pv
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: wordpress-pv
-  namespace: wordpress
-  labels:
-    app: wordpress
-spec:
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: ebs-storage
-  csi:
-    driver: ebs.csi.aws.com
-    volumeHandle: ${WORDPRESS_VOLUME_ID}
-    fsType: ext4
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: wordpress-pv
+#   namespace: wordpress
+#   labels:
+#     app: wordpress
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: ebs-storage
+#   csi:
+#     driver: ebs.csi.aws.com
+#     volumeHandle: ${WORDPRESS_VOLUME_ID}
+#     fsType: ext4
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mysql-pv
-  namespace: wordpress
-  labels:
-    app: wordpress
-spec:
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: ebs-storage
-  csi:
-    driver: ebs.csi.aws.com
-    volumeHandle: ${MYSQL_VOLUME_ID}
-    fsType: ext4
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: mysql-pv
+#   namespace: wordpress
+#   labels:
+#     app: wordpress
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: ebs-storage
+#   csi:
+#     driver: ebs.csi.aws.com
+#     volumeHandle: ${MYSQL_VOLUME_ID}
+#     fsType: ext4

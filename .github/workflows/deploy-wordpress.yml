@@ -44,31 +44,31 @@ jobs:
           kubectl annotate serviceaccount csi-driver -n kube-system eks.amazonaws.com/role-arn=${{ secrets.CSI_DRIVER_ROLE_ARN }}
         continue-on-error: true
       
-      - name: Deploy CSI Driver
-        id: deploy-csi-driver
-        run: |
-          helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
-          helm repo update
+      # - name: Deploy CSI Driver
+      #   id: deploy-csi-driver
+      #   run: |
+      #     helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+      #     helm repo update
 
-          helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
-            -n kube-system \
-            --set region=eu-west-2 \
-            --set controller.serviceAccount.create=false \
-            --set controller.serviceAccount.name=csi-driver
+      #     helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+      #       -n kube-system \
+      #       --set region=eu-west-2 \
+      #       --set controller.serviceAccount.create=false \
+      #       --set controller.serviceAccount.name=csi-driver
 
-      - name: Deploy ingress controller
-        id: deploy-ingress-controller
-        run: |
-          helm repo add eks https://aws.github.io/eks-charts
-          helm repo update
+      # - name: Deploy ingress controller
+      #   id: deploy-ingress-controller
+      #   run: |
+      #     helm repo add eks https://aws.github.io/eks-charts
+      #     helm repo update
 
-          helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
-            -n kube-system \
-            --set clusterName=webapp-eks-cluster \
-            --set serviceAccount.create=false \
-            --set region=eu-west-2 \
-            --set vpcId=$(aws ec2 describe-vpcs --filters "Name=cidr,Values=10.0.0.0/16" --query 'Vpcs[0].VpcId' --output text) \
-            --set serviceAccount.name=aws-load-balancer-controller
+      #     helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+      #       -n kube-system \
+      #       --set clusterName=webapp-eks-cluster \
+      #       --set serviceAccount.create=false \
+      #       --set region=eu-west-2 \
+      #       --set vpcId=$(aws ec2 describe-vpcs --filters "Name=cidr,Values=10.0.0.0/16" --query 'Vpcs[0].VpcId' --output text) \
+      #       --set serviceAccount.name=aws-load-balancer-controller
 
       - name: Deploy Wordpress
         working-directory: "deployment-infra"
