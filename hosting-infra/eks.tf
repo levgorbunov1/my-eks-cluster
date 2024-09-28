@@ -25,7 +25,7 @@ resource "aws_iam_openid_connect_provider" "cluster_oidc_provider" {
 }
 
 resource "aws_launch_template" "eks_node_launch_template" {
-  instance_type = "t3.medium"
+  instance_type = "t3.small"
   name_prefix   = "${var.node_group_name}-lt-"
   key_name = aws_key_pair.eks_cluster_ssh_key.key_name
 
@@ -50,9 +50,9 @@ resource "aws_eks_node_group" "eks_node_group" {
   ]
 
   scaling_config {
-    desired_size = 1
-    max_size = 2
-    min_size = 1
+    desired_size = 2
+    max_size = 3
+    min_size = 2
   }
 
   launch_template {
