@@ -12,4 +12,4 @@ forward-grafana-port:
 	kubectl port-forward -n prometheus pod/$$(kubectl get pods -o custom-columns=:metadata.name -n prometheus | grep prometheus-grafana) 3000:3000
 
 ssh:
-	sudo ssh -i ~/.ssh/id_rsa.pem ec2-user@$$(kubectl get nodes -o json | jq -r '.items[] | select(.status.addresses[]?.type == "ExternalIP") | .status.addresses[] | select(.type == "ExternalIP") | .address')
+	sudo ssh -i ~/.ssh/id_rsa.pem ec2-user@$(IP)
