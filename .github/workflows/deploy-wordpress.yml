@@ -70,6 +70,16 @@ jobs:
             --set vpcId=$(aws ec2 describe-vpcs --filters "Name=cidr,Values=10.0.0.0/16" --query 'Vpcs[0].VpcId' --output text) \
             --set serviceAccount.name=aws-load-balancer-controller
 
+      - name: Deploy Prometheus and Grafana
+        id: deploy-prometheus
+        run: |
+          kubectl create namespace prometheus
+
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+
+          helm install prometheus prometheus-community/kube-prometheus-stack --namespace prometheus
+
       - name: Deploy Wordpress
         working-directory: "deployment-infra"
         id: deploy-wordpress
