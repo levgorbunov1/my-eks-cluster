@@ -27,7 +27,7 @@ resource "aws_iam_openid_connect_provider" "cluster_oidc_provider" {
 resource "aws_launch_template" "eks_node_launch_template" {
   instance_type = "t3.small"
   name_prefix   = "${var.node_group_name}-lt-"
-  # key_name = aws_key_pair.eks_cluster_ssh_key.key_name
+  key_name = aws_key_pair.eks_cluster_ssh_key.key_name
 
   network_interfaces {
     security_groups = [aws_security_group.node_group_sg.id]
